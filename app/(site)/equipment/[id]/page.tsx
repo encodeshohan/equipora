@@ -2,6 +2,7 @@ import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
 import { ArrowLeft, MapPin } from "lucide-react"
 
+import { BookNowModal } from "@/components/equipment/book-now-modal"
 import { FavoriteButton } from "@/components/equipment/favorite-button"
 import { UserAvatar } from "@/components/shared/user-avatar"
 import { getEquipmentById } from "@/lib/api/equipment"
@@ -14,10 +15,13 @@ export const metadata = { title: "Equipment Details" }
 
 export default async function EquipmentDetailsPage({
     params,
+    searchParams,
 }: {
     params: Promise<{ id: string }>
+    searchParams: Promise<{ canceled?: string }>
 }) {
     const { id } = await params
+    const { canceled } = await searchParams
 
     // Private page: logged-out visitors go to login and come back here.
     const session = await getSessionSafe()
@@ -50,6 +54,15 @@ export default async function EquipmentDetailsPage({
                 <ArrowLeft aria-hidden className="size-4" />
                 Back to all equipment
             </Link>
+
+            {canceled ? (
+                <p
+                    role="status"
+                    className="mt-4 rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning"
+                >
+                    Payment was canceled, so your booking was not confirmed.
+                </p>
+            ) : null}
 
             <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
                 <div className="flex min-w-0 flex-col gap-6">
@@ -115,10 +128,21 @@ export default async function EquipmentDetailsPage({
                         </p>
 
                         {isCustomer ? (
-                            <FavoriteButton
-                                equipmentId={item._id}
-                                initialFavorite={favoriteIds.includes(item._id)}
-                            />
+                            <div className="flex flex-col gap-3">
+                                <BookNowModal
+                                    equipment={{
+                                        id: item._id,
+                                        name: item.name,
+                                        price: item.price,
+                                        rentalType: item.rentalType,
+                                        quantity: item.quantity,
+                                    }}
+                                />
+                                <FavoriteButton
+                                    equipmentId={item._id}
+                                    initialFavorite={favoriteIds.includes(item._id)}
+                                />
+                            </div>
                         ) : (
                             <p className="rounded-lg border border-border bg-elevated p-3 text-sm text-fg-secondary">
                                 Only customer accounts can book or save equipment.
