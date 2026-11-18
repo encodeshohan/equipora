@@ -13,6 +13,7 @@ export function SignOutButton() {
     const handleSignOut = async () => {
         await signOut()
         toast.add({ title: "Logged out", type: "success" })
+        router.replace("/")
         router.refresh()
     }
 

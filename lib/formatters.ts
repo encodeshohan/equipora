@@ -7,4 +7,5 @@ export const formatDate = (value: string | Date) =>
         month: "short",
         day: "2-digit",
         year: "numeric",
+        timeZone: "Asia/Dhaka",
     })
