@@ -1,15 +1,30 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import type { Metadata } from "next"
+import { Inter, Plus_Jakarta_Sans } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils"
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'})
-
-const fontMono = Geist_Mono({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-inter",
+  display: "swap",
 })
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+})
+
+export const metadata: Metadata = {
+  title: {
+    default: "Equipora | Rent smarter. Work better.",
+    template: "%s | Equipora",
+  },
+  description:
+    "Equipora is an equipment rental marketplace. List equipment, browse, book and pay securely.",
+}
 
 export default function RootLayout({
   children,
@@ -20,7 +35,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
+      className={cn("antialiased", inter.variable, plusJakarta.variable)}
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>
