@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter, Plus_Jakarta_Sans } from "next/font/google"
+import { Toaster } from "@/components/ui/toast"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -38,7 +39,9 @@ export default function RootLayout({
       className={cn("antialiased", inter.variable, plusJakarta.variable)}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <Toaster>{children}</Toaster>
+        </ThemeProvider>
       </body>
     </html>
   )

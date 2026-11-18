@@ -1,3 +1,5 @@
+import { APIError, createAuthMiddleware } from "better-auth/api"
+import { getPasswordError } from "@/lib/validators"
 import { betterAuth } from "better-auth"
 import { mongodbAdapter } from "@better-auth/mongo-adapter"
 import { MongoClient } from "mongodb"
@@ -18,6 +20,10 @@ if (process.env.NODE_ENV !== "production") {
 
 // Same database as the Express server.
 const db = client.db("equiporadb")
+
+const googleEnabled = Boolean(
+    process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+)
 
 export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL,
@@ -53,4 +59,24 @@ export const auth = betterAuth({
             },
         },
     },
+    // Server-side password rules: the form check alone can be bypassed.
+    hooks: {
+        before: createAuthMiddleware(async (ctx) => {
+            if (ctx.path !== "/sign-up/email") return
+            const error = getPasswordError(ctx.body?.password)
+            if (error) {
+                throw new APIError("BAD_REQUEST", { message: error })
+            }
+        }),
+    },
+    ...(googleEnabled
+        ? {
+            socialProviders: {
+                google: {
+                    clientId: process.env.GOOGLE_CLIENT_ID as string,
+                    clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+                },
+            },
+        }
+        : {}),
 })

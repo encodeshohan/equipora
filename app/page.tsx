@@ -1,5 +1,9 @@
+import Link from "next/link"
+
+import { SignOutButton } from "@/components/auth/sign-out-button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
+import { getSession } from "@/lib/core/server"
 
 const SWATCHES = [
   { name: "background", className: "bg-background" },
@@ -12,12 +16,33 @@ const SWATCHES = [
   { name: "info", className: "bg-info" },
 ]
 
-export default function Page() {
+export default async function Page() {
+  const session = await getSession()
+
   return (
     <main className="site-container py-10">
-      <header className="flex items-center justify-between">
+      <header className="flex items-center justify-between gap-3">
         <p className="font-heading text-xl font-bold">Equipora</p>
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+          {session ? (
+            <>
+              <span className="text-sm text-fg-secondary">
+                {session.user.name} ({session.user.role})
+              </span>
+              <SignOutButton />
+            </>
+          ) : (
+            <>
+              <Link href="/signin" className="text-sm font-medium">
+                Login
+              </Link>
+              <Link href="/signup" className="btn-brand">
+                Register
+              </Link>
+            </>
+          )}
+          <ThemeToggle />
+        </div>
       </header>
 
       <section className="mt-12 flex flex-col gap-3">
