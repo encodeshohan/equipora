@@ -70,3 +70,12 @@ export type FavoriteItem = EquipmentItem & {
     favoriteId: string
     favoritedAt: string
 }
+
+export const RENTAL_TYPES: RentalType[] = ["daily", "weekly", "monthly"]
+
+export const CONDITIONS = [
+    { value: "new", label: "New" },
+    { value: "like-new", label: "Like new" },
+    { value: "good", label: "Good" },
+    { value: "fair", label: "Fair" },
+]

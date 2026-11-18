@@ -1,6 +1,6 @@
 import "server-only"
 
-import { API_BASE_URL } from "@/lib/core/server"
+import { API_BASE_URL, getToken } from "@/lib/core/server"
 import {
     EQUIPMENT_CATEGORIES,
     type CategorySummary,
@@ -57,6 +57,22 @@ export const getEquipmentById = async (
         cache: "no-store",
     })
     if (res.status === 400 || res.status === 404) return null
+    if (!res.ok) throw new Error(`Equipment request failed (${res.status})`)
+    return (await res.json()) as EquipmentItem
+}
+
+
+// Full record for the owner of an item or an admin, including pending and
+// rejected items. null = not found or not allowed.
+export const getManagedEquipment = async (
+    id: string
+): Promise<EquipmentItem | null> => {
+    const token = await getToken()
+    const res = await fetch(
+        `${API_BASE_URL}/equipment/${encodeURIComponent(id)}/manage`,
+        { cache: "no-store", headers: { authorization: `Bearer ${token}` } }
+    )
+    if ([400, 401, 403, 404].includes(res.status)) return null
     if (!res.ok) throw new Error(`Equipment request failed (${res.status})`)
     return (await res.json()) as EquipmentItem
 }

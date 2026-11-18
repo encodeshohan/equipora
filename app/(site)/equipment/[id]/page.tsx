@@ -5,7 +5,7 @@ import { ArrowLeft, MapPin } from "lucide-react"
 import { BookNowModal } from "@/components/equipment/book-now-modal"
 import { FavoriteButton } from "@/components/equipment/favorite-button"
 import { UserAvatar } from "@/components/shared/user-avatar"
-import { getEquipmentById } from "@/lib/api/equipment"
+import { getEquipmentById, getManagedEquipment } from "@/lib/api/equipment"
 import { getFavoriteIds } from "@/lib/api/favorites"
 import { getSessionSafe } from "@/lib/core/server"
 import { formatDate, formatMoney } from "@/lib/formatters"
@@ -29,7 +29,11 @@ export default async function EquipmentDetailsPage({
         redirect(`/signin?redirectTo=${encodeURIComponent(`/equipment/${id}`)}`)
     }
 
-    const item = await getEquipmentById(id)
+    // Owners and admins can also open their own pending or rejected listings.
+    const canPreview = session.user.role === "owner" || session.user.role === "admin"
+    const item =
+        (await getEquipmentById(id)) ??
+        (canPreview ? await getManagedEquipment(id) : null)
     if (!item) notFound()
 
     const isCustomer = session.user.role === "customer"
@@ -61,6 +65,15 @@ export default async function EquipmentDetailsPage({
                     className="mt-4 rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning"
                 >
                     Payment was canceled, so your booking was not confirmed.
+                </p>
+            ) : null}
+
+            {item.status !== "approved" ? (
+                <p
+                    role="status"
+                    className="mt-4 rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning"
+                >
+                    This listing is {item.status} and is not visible to the public.
                 </p>
             ) : null}
 
