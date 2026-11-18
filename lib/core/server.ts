@@ -19,6 +19,19 @@ export const getSession = async () => {
     return session
 }
 
+// Never throws: used by public pages so a failed lookup cannot crash the landing page.
+export const getSessionSafe = async () => {
+    try {
+        return await getSession()
+    } catch (error) {
+        console.error(
+            "Session lookup failed:",
+            error instanceof Error ? error.message : "unknown error"
+        )
+        return null
+    }
+}
+
 // The better-auth session token is what the Express server verifies.
 export const getToken = async () => {
     const session = await getSession()
