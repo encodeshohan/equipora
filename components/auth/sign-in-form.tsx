@@ -7,22 +7,9 @@ import { Eye, EyeOff, Loader2 } from "lucide-react"
 
 import { GoogleButton } from "@/components/auth/google-button"
 import { Field } from "@/components/shared/field"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/toast"
 import { authClient } from "@/lib/auth-client"
-
-// NEXT_PUBLIC_* values are inlined at build time (demo accounts only).
-const DEMO_ACCOUNTS = {
-    admin: {
-        email: process.env.NEXT_PUBLIC_DEMO_ADMIN_EMAIL,
-        password: process.env.NEXT_PUBLIC_DEMO_ADMIN_PASSWORD,
-    },
-    owner: {
-        email: process.env.NEXT_PUBLIC_DEMO_OWNER_EMAIL,
-        password: process.env.NEXT_PUBLIC_DEMO_OWNER_PASSWORD,
-    },
-} as const
 
 export function SignInForm({ redirectTo }: { redirectTo: string }) {
     const router = useRouter()
@@ -31,12 +18,14 @@ export function SignInForm({ redirectTo }: { redirectTo: string }) {
     const [showPassword, setShowPassword] = React.useState(false)
     const [pending, setPending] = React.useState(false)
 
-    const login = async (emailValue: string, passwordValue: string) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+
         setPending(true)
         try {
             const { error } = await authClient.signIn.email({
-                email: emailValue,
-                password: passwordValue,
+                email: email.trim(),
+                password,
                 rememberMe: true,
             })
 
@@ -60,24 +49,6 @@ export function SignInForm({ redirectTo }: { redirectTo: string }) {
         } finally {
             setPending(false)
         }
-    }
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        login(email.trim(), password)
-    }
-
-    const handleDemo = (role: keyof typeof DEMO_ACCOUNTS) => {
-        const account = DEMO_ACCOUNTS[role]
-        if (!account.email || !account.password) {
-            toast.add({
-                title: "Demo account not configured",
-                description: "Add the NEXT_PUBLIC_DEMO_* values to .env.local.",
-                type: "error",
-            })
-            return
-        }
-        login(account.email, account.password)
     }
 
     return (
@@ -143,29 +114,7 @@ export function SignInForm({ redirectTo }: { redirectTo: string }) {
                 <span className="h-px flex-1 bg-border" />
             </div>
 
-            <div className="flex flex-col gap-3">
-                <GoogleButton redirectTo={redirectTo} disabled={pending} />
-                <div className="grid grid-cols-2 gap-3">
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        className="h-11"
-                        disabled={pending}
-                        onClick={() => handleDemo("admin")}
-                    >
-                        Demo Admin
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        className="h-11"
-                        disabled={pending}
-                        onClick={() => handleDemo("owner")}
-                    >
-                        Demo Owner
-                    </Button>
-                </div>
-            </div>
+            <GoogleButton redirectTo={redirectTo} disabled={pending} />
 
             <p className="mt-6 text-center text-sm text-fg-secondary">
                 New to Equipora?{" "}
