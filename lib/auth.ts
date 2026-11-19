@@ -2,7 +2,7 @@ import { APIError, createAuthMiddleware } from "better-auth/api"
 import { getPasswordError } from "@/lib/validators"
 import { betterAuth } from "better-auth"
 import { mongodbAdapter } from "@better-auth/mongo-adapter"
-import { MongoClient } from "mongodb"
+import { MongoClient, ObjectId } from "mongodb"
 
 const mongoUri = process.env.MONGODB_URI
 
@@ -56,6 +56,25 @@ export const auth = betterAuth({
                         role: user.role === "owner" ? "owner" : "customer",
                     },
                 }),
+            },
+        },
+        session: {
+            create: {
+                // Suspended accounts cannot start a new session.
+                before: async (session) => {
+                    const userId = String(session.userId)
+                    if (!/^[a-f\d]{24}$/i.test(userId)) return
+
+                    const user = await db
+                        .collection("user")
+                        .findOne({ _id: new ObjectId(userId) }, { projection: { banned: 1 } })
+
+                    if (user?.banned) {
+                        throw new APIError("FORBIDDEN", {
+                            message: "This account has been suspended.",
+                        })
+                    }
+                },
             },
         },
     },

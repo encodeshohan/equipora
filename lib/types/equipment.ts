@@ -29,6 +29,8 @@ export type EquipmentItem = {
     ownerId: string
     ownerName: string
     ownerImage: string | null
+    /** Only present on owner/admin management responses. */
+    ownerEmail?: string
     createdAt: string
     updatedAt: string
 }
