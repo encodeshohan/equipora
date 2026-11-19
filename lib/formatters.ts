@@ -9,3 +9,10 @@ export const formatDate = (value: string | Date) =>
         year: "numeric",
         timeZone: "Asia/Dhaka",
     })
+
+// 1250 -> "1.3K", used for chart axes.
+export const formatCompact = (value: number) =>
+    new Intl.NumberFormat("en-US", {
+        notation: "compact",
+        maximumFractionDigits: 1,
+    }).format(value)
