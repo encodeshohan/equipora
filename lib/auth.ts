@@ -3,6 +3,7 @@ import { getPasswordError } from "@/lib/validators"
 import { betterAuth } from "better-auth"
 import { mongodbAdapter } from "@better-auth/mongo-adapter"
 import { MongoClient, ObjectId } from "mongodb"
+import { jwt } from "better-auth/plugins"
 
 const mongoUri = process.env.MONGODB_URI
 
@@ -92,6 +93,17 @@ export const auth = betterAuth({
             }
         }),
     },
+    plugins: [
+        jwt({
+            jwt: {
+                definePayload: ({ user }) => ({
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                }),
+            },
+        }),
+    ],
     ...(googleEnabled
         ? {
             socialProviders: {
