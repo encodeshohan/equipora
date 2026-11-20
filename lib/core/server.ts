@@ -32,13 +32,16 @@ export const getSessionSafe = async () => {
     }
 }
 
-// The better-auth session token is what the Express server verifies.
 export const getToken = async () => {
     const session = await getSession()
-    if (!session?.session?.token) {
+    if (!session) {
         redirect(LOGIN_PATH)
     }
-    return session.session.token
+    const result = await auth.api.getToken({ headers: await headers() })
+    if (!result?.token) {
+        redirect(LOGIN_PATH)
+    }
+    return result.token
 }
 
 const rejectIfDenied = (res: Response) => {
