@@ -19,6 +19,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
+  icons: { icon: "/logo.png" },
   title: {
     default: "Equipora | Rent smarter. Work better.",
     template: "%s | Equipora",

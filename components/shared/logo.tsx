@@ -1,20 +1,45 @@
+import Image from "next/image"
 import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({
+    className,
+    showName = false,
+}: {
+    className?: string
+    showName?: boolean
+}) {
     return (
         <Link
             href="/"
             aria-label="Equipora home"
-            className={cn("inline-flex items-center gap-2", className)}
+            className={cn("inline-flex shrink-0 items-center gap-2.5", className)}
         >
-            <span className="flex size-8 items-center justify-center rounded-lg bg-brand font-heading text-base font-extrabold text-on-brand">
-                E
-            </span>
-            <span className="font-heading text-xl font-bold tracking-tight text-foreground">
-                Equipora
-            </span>
+            <Image
+                src="/images/logo-dark-mode.png"
+                alt={showName ? "" : "Equipora"}
+                width={240}
+                height={60}
+                priority
+                unoptimized
+                className="hidden h-9 w-auto object-contain select-none dark:block"
+            />
+            <Image
+                src="/images/logo-light-mode.png"
+                alt=""
+                aria-hidden
+                width={240}
+                height={60}
+                priority
+                unoptimized
+                className="block h-9 w-auto object-contain select-none dark:hidden"
+            />
+            {showName ? (
+                <span className="font-heading text-xl font-bold tracking-tight text-foreground">
+                    Equipora
+                </span>
+            ) : null}
         </Link>
     )
 }

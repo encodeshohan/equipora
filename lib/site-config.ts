@@ -9,7 +9,7 @@ export const SITE = {
 }
 
 // Replace with your own photo, e.g. "/hero.jpg" (file in /public).
-export const HERO_IMAGE = "https://picsum.photos/seed/equipora-hero/1920/1080"
+export const HERO_IMAGE = "/images/banner-image.png"
 
 export const NAV_LINKS = [
     { label: "Home", href: "/" },
