@@ -62,6 +62,15 @@ export const auth = betterAuth({
                     },
                 }),
             },
+            update: {
+                // Users can never change their own role. The admin dashboard
+                // changes roles through the Express server, not through here.
+                before: async (user) => {
+                    const { role, ...rest } = user
+                    void role
+                    return { data: rest }
+                },
+            },
         },
         session: {
             create: {
