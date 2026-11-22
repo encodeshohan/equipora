@@ -24,3 +24,11 @@ export type OwnerAnalytics = {
     totalEarnings: number
     monthly: MonthStat[]
 }
+
+export type CustomerAnalytics = {
+    totalRentals: number
+    paidRentals: number
+    completedRentals: number
+    totalSpent: number
+    monthly: MonthStat[]
+}

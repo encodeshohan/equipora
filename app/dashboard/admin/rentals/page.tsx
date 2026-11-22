@@ -1,5 +1,6 @@
 import Link from "next/link"
 
+import { BookingStatusActions } from "@/components/dashboard/booking-status-actions"
 import { PageContainer, PageHeader } from "@/components/dashboard/page-shell"
 import { NativeSelect } from "@/components/shared/native-select"
 import { Pagination } from "@/components/shared/pagination"
@@ -44,7 +45,7 @@ export default async function AdminRentalsPage({
             <PageHeader
                 overline="Admin"
                 title="All Rentals"
-                subtitle="Every booking on the platform, with payment and booking status."
+                subtitle="Every booking on the platform. Cancel a rental or mark a paid rental as completed."
             />
 
             <form className="mb-4 flex flex-wrap items-end gap-3">
@@ -83,7 +84,7 @@ export default async function AdminRentalsPage({
 
             <section className="surface-card overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full min-w-[64rem] text-left text-sm">
+                    <table className="w-full min-w-[76rem] text-left text-sm">
                         <thead className="bg-elevated">
                             <tr>
                                 <th scope="col" className={headClass}>Customer</th>
@@ -93,6 +94,7 @@ export default async function AdminRentalsPage({
                                 <th scope="col" className={headClass}>Amount</th>
                                 <th scope="col" className={headClass}>Payment</th>
                                 <th scope="col" className={headClass}>Status</th>
+                                <th scope="col" className={headClass}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -140,6 +142,14 @@ export default async function AdminRentalsPage({
                                     </td>
                                     <td className={cellClass}>
                                         <StatusPill {...BOOKING_STATUS_META[booking.bookingStatus]} />
+                                    </td>
+                                    <td className={`${cellClass} whitespace-nowrap`}>
+                                        <BookingStatusActions
+                                            id={booking._id}
+                                            equipmentName={booking.equipmentName}
+                                            bookingStatus={booking.bookingStatus}
+                                            paid={booking.paymentStatus === "paid"}
+                                        />
                                     </td>
                                 </tr>
                             ))}
