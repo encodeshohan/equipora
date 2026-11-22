@@ -81,6 +81,7 @@ This repository is the **frontend**. It talks to the [equipora-server](https://g
 - Save equipment with one click and remove it any time
 - Favorites table with availability and quick links
 - My Rentals shows dates, totals, payment status and booking status
+- Dashboard with total, completed and spent stats, plus monthly rentals and monthly spending charts
 
 ### 4. 🛠️ Owner Dashboard
 
@@ -95,6 +96,8 @@ This repository is the **frontend**. It talks to the [equipora-server](https://g
 - Approve or reject equipment, edit any listing and delete equipment
 - All Users table: search, filter by role, change roles, suspend or restore accounts
 - All Rentals table with payment and booking status filters
+- Cancel a rental, or mark a paid rental as completed, with a confirmation step
+- Cancelling an unpaid rental also closes its Stripe checkout
 - Platform analytics: users, equipment, paid bookings, pending approvals and gross revenue
 
 ### 6. 🔐 Authentication and Role-Based Access
@@ -318,6 +321,8 @@ Equipora is deployed on [Vercel](https://vercel.com/).
 
 - Dates are handled in Bangladesh time (Asia/Dhaka).
 - Prices are in Bangladeshi taka (৳).
+- Revenue, earnings and spending charts are calculated from verified payments.
+- Cancelling a paid rental does not refund it automatically. Refund the payment in the Stripe dashboard.
 - Customer reviews on the home page are static sample content.
 - Bookings are marked as Completed automatically once their end date has passed.
 
