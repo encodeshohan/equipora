@@ -319,12 +319,12 @@ Equipora is deployed on [Vercel](https://vercel.com/).
 - Dates are handled in Bangladesh time (Asia/Dhaka).
 - Prices are in Bangladeshi taka (৳).
 - Customer reviews on the home page are static sample content.
+- Bookings are marked as Completed automatically once their end date has passed.
 
 ---
 
 ## 📌 Future Improvements
 
-- ⏰ Automatically mark bookings as **Completed** after their end date
 - 🪝 Stripe webhooks, so payments confirm even if the customer closes the tab
 - 📧 Email notifications for bookings and approvals
 - ⭐ Real customer reviews and ratings
