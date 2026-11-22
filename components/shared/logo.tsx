@@ -5,9 +5,12 @@ import { cn } from "@/lib/utils"
 
 export function Logo({
     className,
+    imageClassName,
     showName = false,
 }: {
     className?: string
+    /** Override the logo size, for example "h-9" in a tight spot. */
+    imageClassName?: string
     showName?: boolean
 }) {
     return (
@@ -23,7 +26,10 @@ export function Logo({
                 height={60}
                 priority
                 unoptimized
-                className="hidden h-9 w-auto object-contain select-none dark:block"
+                className={cn(
+                    "hidden h-11 w-auto object-contain select-none sm:h-12 dark:block",
+                    imageClassName
+                )}
             />
             <Image
                 src="/images/logo-light-mode.png"
@@ -33,7 +39,10 @@ export function Logo({
                 height={60}
                 priority
                 unoptimized
-                className="block h-9 w-auto object-contain select-none dark:hidden"
+                className={cn(
+                    "block h-11 w-auto object-contain select-none sm:h-12 dark:hidden",
+                    imageClassName
+                )}
             />
             {showName ? (
                 <span className="font-heading text-xl font-bold tracking-tight text-foreground">
